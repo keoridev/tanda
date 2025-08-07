@@ -2,7 +2,7 @@
 import { Button } from "~app/components/ui/button";
 import { Input } from "~app/components/ui/input";
 import { Label } from "~app/components/ui/label";
-import PhoneInput from "react-phone-input-2";
+import PhoneInput, { PhoneInputProps } from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { useAuthLogic } from "../model/hooks/useAuthLogic";
 import { Reveal } from "~shared/lib/framer";
@@ -34,7 +34,7 @@ export const AuthForm = ({ testResults }: AuthFormProps) => {
     isSubmitting,
   } = useAuthLogic(testResults);
 
-  const phoneInputRef = useRef<any>(null);
+  const phoneInputRef = useRef<PhoneInputProps>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -147,7 +147,6 @@ export const AuthForm = ({ testResults }: AuthFormProps) => {
               </Label>
               <div className="relative">
                 <PhoneInput
-                  ref={phoneInputRef}
                   country={"kg"}
                   value={phone}
                   onChange={handlePhoneChange}

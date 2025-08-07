@@ -1,6 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { GenericLayout } from "~app/layout";
-import { homePageRoute } from "~pages/index";
 import { tandaPageRoute } from "~pages/tanda";
 import { TestPageRoute } from "~pages/tandaTestPage";
 import { LoginPageRoute } from "~pages/tandaLoginPage/tandaLogin.route";

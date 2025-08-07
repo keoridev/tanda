@@ -93,7 +93,7 @@ export const useAuthLogic = (testResults?: Record<string, number>) => {
       };
     });
 
-    let totalInteger = temp.reduce((sum, { integer }) => sum + integer, 0);
+    const totalInteger = temp.reduce((sum, { integer }) => sum + integer, 0);
 
     if (totalInteger < 100) {
       const sorted = [...temp].sort((a, b) => b.remainder - a.remainder);
@@ -130,7 +130,7 @@ export const useAuthLogic = (testResults?: Record<string, number>) => {
           comment,
         });
 
-        navigate(pathKeys.tanda.tandaResult());
+        navigate("/result");
       } catch (error: any) {
         console.error("Ошибка отправки:", error);
         setFormState((prev) => ({

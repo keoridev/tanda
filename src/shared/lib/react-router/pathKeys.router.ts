@@ -2,7 +2,7 @@ export const pathKeys = {
   root: "/",
   tanda: {
     root() {
-      return pathKeys.root.concat("tanda/");
+      return pathKeys.root.concat("/");
     },
     tandaTest() {
       return pathKeys.tanda.root().concat("test/");

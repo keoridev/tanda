@@ -48,7 +48,7 @@ export const useQuizLogic = () => {
     } else {
       setIsTestFinished(true);
       localStorage.setItem("quizResults", JSON.stringify(results));
-      navigate(pathKeys.tanda.tandaLogin());
+      navigate('/login');
     }
 
     setSelectedOption("");

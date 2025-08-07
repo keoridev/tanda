@@ -1,11 +1,11 @@
 // features/StrongSides/ui/StrongSidesCard/StrongSidesCard.tsx
 import { FC } from "react";
 import { useStrongSides } from "./model/lib/useStrongSides";
-import { SkillScore, ProfessionData } from "./model/types/strongSidesTypes";
+import { ProfessionData } from "./model/types/strongSidesTypes";
 import star from "../../../public/tanda/StrongSides/icon-star.png";
 import { skillToProfessions } from "./model/StrongSideData";
 import { ResultChartProps } from "~features/tandaResults";
-import { Typography, Box } from "@mui/material";
+import { Box } from "@mui/material";
 export const StrongSidesCard: FC<ResultChartProps> = ({ results }) => {
   const { topSkills } = useStrongSides(results);
 

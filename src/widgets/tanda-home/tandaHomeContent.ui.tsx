@@ -44,7 +44,7 @@ export const HomeContent: React.FC = () => {
       <Reveal from="bottom" delay={0.3}>
         <Button
           className="bg-[#005B50] hover:bg-[#004b45] "
-          onClick={() => navigate(pathKeys.tanda.tandaTest())}
+          onClick={() => navigate('/test')}
           style={{
             borderRadius: "20px",
             fontSize: "16px",
