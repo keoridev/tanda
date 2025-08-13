@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { questionsData } from "~entities/tandaQuestion";
 import { SkillScore } from "~entities/tandaQuestion";
-import { pathKeys } from "~shared/lib";
 
 export const useQuizLogic = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -48,7 +47,7 @@ export const useQuizLogic = () => {
     } else {
       setIsTestFinished(true);
       localStorage.setItem("quizResults", JSON.stringify(results));
-      navigate('/login');
+      navigate("/login");
     }
 
     setSelectedOption("");

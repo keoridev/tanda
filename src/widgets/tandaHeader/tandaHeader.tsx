@@ -1,8 +1,3 @@
-import React from "react";
-
-import { Link } from "react-router-dom";
-import { pathKeys } from "~shared/lib/react-router";
-
 export const HomeHeader = () => {
   return (
     <div className="">

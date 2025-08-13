@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSubmitTrainingApplication } from "~entities/tanda";
-import { pathKeys } from "~shared/lib/react-router";
 const initialFormState = {
   name: "",
   email: "",

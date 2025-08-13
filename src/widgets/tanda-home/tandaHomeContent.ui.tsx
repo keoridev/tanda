@@ -1,11 +1,9 @@
-import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import HomeImg from "../../../public/tanda/HeaderImg.svg";
 import questionImg from "../../../public/tanda/question.png";
 import timeImg from "../../../public/tanda/time.png";
 import { Button } from "~app/components/ui/button";
 import { Reveal } from "~shared/lib/framer";
-import { pathKeys } from "~shared/lib";
 export const HomeContent: React.FC = () => {
   const navigate = useNavigate();
 

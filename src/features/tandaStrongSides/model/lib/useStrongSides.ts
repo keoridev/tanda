@@ -1,4 +1,4 @@
-import { SkillScore, ProfessionData } from "../types/strongSidesTypes";
+import { SkillScore } from "../types/strongSidesTypes";
 import { skillToProfessions } from "../StrongSideData";
 
 export const useStrongSides = (results: Record<string, number>) => {

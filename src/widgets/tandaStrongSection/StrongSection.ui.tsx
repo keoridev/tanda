@@ -1,7 +1,6 @@
 import React from "react";
 import { StrongSidesCard } from "~features/tandaStrongSides";
 import { ResultChartProps } from "~features/tandaResults";
-import { Typography } from "@mui/material";
 export const StrongSection: React.FC<ResultChartProps> = ({ results }) => {
   return (
     <div>
