@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { questionsData } from "~entities/tandaQuestion";
-import { SkillScore } from "~entities/tandaQuestion";
 
 export const useQuizLogic = () => {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
-  const [selectedOption, setSelectedOption] = useState<string>("");
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Обновленный список навыков
-  const [results, setResults] = useState<SkillScore>({
+  const [results, setResults] = useState({
     "Визуальное мышление": 0,
     Креативность: 0,
     Логика: 0,
@@ -17,15 +17,18 @@ export const useQuizLogic = () => {
     Структурирование: 0,
   });
 
-  const [isTestFinished, setIsTestFinished] = useState<boolean>(false);
+  const [isTestFinished, setIsTestFinished] = useState(false);
   const navigate = useNavigate();
 
-  const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedOption(event.target.value);
+  const handleOptionChange = (value: string) => {
+    if (isSubmitting) return;
+    setSelectedOption(value);
   };
 
-  const handleNextQuestion = () => {
-    if (!selectedOption) return;
+  const submitAnswer = () => {
+    if (!selectedOption || isSubmitting) return;
+
+    setIsSubmitting(true);
 
     const currentQuestion = questionsData[0].questions[currentQuestionIndex];
     const selectedOptionData = currentQuestion.options.find(
@@ -42,20 +45,31 @@ export const useQuizLogic = () => {
       });
     }
 
-    if (currentQuestionIndex < questionsData[0].questions.length - 1) {
-      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-    } else {
-      setIsTestFinished(true);
-      localStorage.setItem("quizResults", JSON.stringify(results));
-      navigate("/login");
-    }
+    setTimeout(() => {
+      goToNextQuestion();
+      setIsSubmitting(false);
+    }, 300);
+  };
 
-    setSelectedOption("");
+  const goToNextQuestion = () => {
+    if (currentQuestionIndex < questionsData[0].questions.length - 1) {
+      setCurrentQuestionIndex((prev) => prev + 1);
+      setSelectedOption("");
+    } else {
+      finishTest();
+    }
+  };
+
+  const finishTest = () => {
+    setIsTestFinished(true);
+    localStorage.setItem("quizResults", JSON.stringify(results));
+    navigate("/login");
   };
 
   const handlePreviousQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex((prevIndex) => prevIndex - 1);
+    if (currentQuestionIndex > 0 && !isSubmitting) {
+      setCurrentQuestionIndex((prev) => prev - 1);
+      setSelectedOption("");
     }
   };
 
@@ -63,9 +77,11 @@ export const useQuizLogic = () => {
     currentQuestionIndex,
     selectedOption,
     handleOptionChange,
-    handleNextQuestion,
+    submitAnswer,
     results,
     isTestFinished,
+    isSubmitting,
     handlePreviousQuestion,
+    totalQuestions: questionsData[0].questions.length,
   };
 };
