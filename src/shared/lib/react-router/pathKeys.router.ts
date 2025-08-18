@@ -14,4 +14,13 @@ export const pathKeys = {
       return pathKeys.tanda.root().concat("result/");
     },
   },
+
+  mentors: {
+    root() {
+      return pathKeys.root.concat("mentors/");
+    },
+    byId(mentorId: string) {
+      return pathKeys.mentors.root().concat(`${mentorId}`);
+    },
+  },
 };

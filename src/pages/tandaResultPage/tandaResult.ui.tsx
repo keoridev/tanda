@@ -5,6 +5,8 @@ import { SalaryInfo } from "~features/tandaSalaryInfo";
 import { CardMentor } from "~features/tandaMentor";
 import { ScrollTop } from "~shared/lib/react-router/scroll-top";
 import { Preloader } from "~shared/ui/preloader";
+import { TechStackCard } from "~features/tech-stack";
+import { LearningPathCard } from "~features/learning-path";
 
 export const TandaResult: React.FC = () => {
   const [isTestCompleted, setIsTestCompleted] = useState(false);
@@ -55,6 +57,8 @@ export const TandaResult: React.FC = () => {
       <ResultChart results={results} />
       <StrongSection results={results} />
       <SalaryInfo />
+      <TechStackCard />
+      <LearningPathCard />
       <CardMentor />
     </div>
   );

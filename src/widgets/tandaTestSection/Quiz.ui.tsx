@@ -26,7 +26,6 @@ export const Quiz = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading) return <Preloader />;
   if (!quizQuestions.length)
     return (
       <div className="flex items-center justify-center h-screen">
@@ -36,7 +35,7 @@ export const Quiz = () => {
 
   return (
     <div className="min-h-screen  py-8 px-4">
-      <div className="max-w-3xl mx-auto">
+      <div className="xl:w-3xl lg:w-2xl mx-auto ">
         <AnimatePresence mode="wait">
           {isTestFinished ? (
             <motion.div

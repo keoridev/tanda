@@ -4,13 +4,20 @@ import { tandaPageRoute } from "~pages/tanda";
 import { TestPageRoute } from "~pages/tandaTestPage";
 import { LoginPageRoute } from "~pages/tandaLoginPage/tandaLogin.route";
 import { ResultPageRoute } from "~pages/tandaResultPage";
+import { MentorPageRoute } from "~pages/mentor-page";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <GenericLayout />,
     errorElement: <h1>Error 404!</h1>,
-    children: [tandaPageRoute, TestPageRoute, LoginPageRoute, ResultPageRoute],
+    children: [
+      tandaPageRoute,
+      TestPageRoute,
+      LoginPageRoute,
+      ResultPageRoute,
+      MentorPageRoute,
+    ],
   },
 ]);
 

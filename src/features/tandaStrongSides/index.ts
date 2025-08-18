@@ -1,1 +1,1 @@
-export { StrongSidesCard } from "./StrongSidesCard";
+export { ProfessionCard } from "./StrongSidesCard";
