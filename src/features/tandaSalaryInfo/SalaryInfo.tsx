@@ -84,10 +84,10 @@ export const SalaryInfo: FC = () => {
             </CarouselContent>
 
             {/* Navigation buttons */}
-            {/* <div className="">
-              <CarouselPrevious className="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/80 backdrop-blur-sm border-2 border-teal-200 hover:border-teal-400 hover:bg-white transition-all shadow-lg" />
-              <CarouselNext className="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/80 backdrop-blur-sm border-2 border-teal-200 hover:border-teal-400 hover:bg-white transition-all shadow-lg" />
-            </div> */}
+            <div className="">
+              <CarouselPrevious className="absolute left-[-10px]  -translate-y-1/2 w-12 h-12 bg-white/80 backdrop-blur-sm border-2 border-teal-200 hover:border-teal-400 hover:bg-white transition-all shadow-lg" />
+              <CarouselNext className="absolute right-[-10px] -translate-y-1/2 w-12 h-12 bg-white/80 backdrop-blur-sm border-2 border-teal-200 hover:border-teal-400 hover:bg-white transition-all shadow-lg" />
+            </div>
           </Carousel>
         </motion.div>
 

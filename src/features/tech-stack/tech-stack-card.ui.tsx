@@ -4,6 +4,7 @@ import { techStacks } from "~entities/tech-stack";
 export const TechStackCard = () => {
   const [selectedProfession, setSelectedProfession] = useState(
     techStacks[0].profession
+    
   );
 
   const selectedStack =

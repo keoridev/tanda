@@ -1,6 +1,6 @@
 // features/StrongSides/ui/StrongSidesCard/StrongSidesCard.tsx
-import { FC, useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { FC, useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { ProfessionData } from "./model/types/strongSidesTypes";
 
@@ -10,6 +10,8 @@ import {
   Briefcase,
   ArrowRight,
   Rocket,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 
 // Enhanced animated counter with smooth transitions
@@ -73,6 +75,95 @@ const ProfessionBadge: FC<{ profession: string; index: number }> = ({
   </motion.div>
 );
 
+// Text content with show more/less functionality for mobile
+const ExpandableContent: FC<{
+  title: string;
+  content: string;
+  icon: React.ReactNode;
+  delay: number;
+}> = ({ title, content, icon, delay }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [needsExpansion, setNeedsExpansion] = useState(false);
+  const contentRef = useRef<HTMLParagraphElement>(null);
+
+  // Check if text needs to be truncated on mobile
+  useEffect(() => {
+    const checkTextOverflow = () => {
+      if (contentRef.current && window.innerWidth < 1024) {
+        // Check if text content exceeds 5 lines
+        const lineHeight = parseInt(
+          getComputedStyle(contentRef.current).lineHeight
+        );
+        const maxHeight = lineHeight * 5; // 5 lines max
+        setNeedsExpansion(contentRef.current.scrollHeight > maxHeight);
+      } else {
+        setNeedsExpansion(false);
+      }
+    };
+
+    checkTextOverflow();
+    window.addEventListener("resize", checkTextOverflow);
+
+    return () => window.removeEventListener("resize", checkTextOverflow);
+  }, [content]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay, duration: 0.5 }}
+      className="mb-10"
+    >
+      <div className="flex items-center gap-4 mb-6">
+        <div className="p-2.5 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg shadow-md">
+          {icon}
+        </div>
+        <h3 className="text-2xl font-bold text-gray-900 tracking-tight">
+          {title}
+        </h3>
+      </div>
+
+      <div className="relative">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: delay + 0.1, duration: 0.4 }}
+          className="p-6 bg-gradient-to-br from-emerald-50/80 to-white rounded-xl border-l-4 border-emerald-400 shadow-sm"
+        >
+          <p
+            ref={contentRef}
+            className={`text-lg text-gray-700 leading-relaxed tracking-normal ${
+              needsExpansion && !isExpanded ? "line-clamp-5" : ""
+            }`}
+          >
+            {content}
+          </p>
+
+          {/* Show more/less button for mobile */}
+          {needsExpansion && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="lg:hidden flex items-center mt-4 text-emerald-600 font-medium text-sm"
+            >
+              {isExpanded ? (
+                <>
+                  <span>Свернуть</span>
+                  <ChevronUp className="w-4 h-4 ml-1" />
+                </>
+              ) : (
+                <>
+                  <span>Развернуть</span>
+                  <ChevronDown className="w-4 h-4 ml-1" />
+                </>
+              )}
+            </button>
+          )}
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
+
 // Enhanced profession card with glass morphism effect
 export const ProfessionCard: FC<{
   data: ProfessionData;
@@ -113,7 +204,6 @@ export const ProfessionCard: FC<{
       {/* Background glow effect */}
 
       <div className="flex flex-col lg:flex-row gap-0 bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 border border-white/80 overflow-hidden">
-        
         <div
           className={`flex-1 max-w-full lg:max-w-[500px] relative overflow-hidden ${data.backgroundColor}`}
           style={{ minHeight: "480px" }}
@@ -183,50 +273,20 @@ export const ProfessionCard: FC<{
           className="flex-1 p-8 bg-gradient-to-br from-white/95 to-gray-50/95 backdrop-blur-sm"
         >
           {/* Why It Fits Section */}
-          <div className="mb-10">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="p-2.5 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg shadow-md">
-                <CheckCircle2 className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 tracking-tight">
-                Почему подходит
-              </h3>
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: index * 0.15 + 0.6 }}
-              className="p-6 bg-gradient-to-br from-emerald-50/80 to-white rounded-xl border-l-4 border-emerald-400 shadow-sm"
-            >
-              <p className="text-lg text-gray-700 leading-relaxed tracking-normal">
-                {data.reason || "Информация недоступна"}
-              </p>
-            </motion.div>
-          </div>
+          <ExpandableContent
+            title="Почему подходит"
+            content={data.reason || "Информация недоступна"}
+            icon={<CheckCircle2 className="w-6 h-6 text-white" />}
+            delay={index * 0.15 + 0.6}
+          />
 
           {/* Profession Essence Section */}
-          <div className="mb-10">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="p-2.5 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-lg shadow-md">
-                <Briefcase className="w-6 h-6 text-white" />
-              </div>
-              <h4 className="text-2xl font-bold text-gray-900 tracking-tight">
-                Суть профессии
-              </h4>
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: index * 0.15 + 0.7 }}
-              className="p-6 bg-gradient-to-br from-blue-50/80 to-white rounded-xl border-l-4 border-blue-400 shadow-sm"
-            >
-              <p className="text-lg text-gray-700 leading-relaxed tracking-normal">
-                {data.description || "Описание недоступно"}
-              </p>
-            </motion.div>
-          </div>
+          <ExpandableContent
+            title="Суть профессии"
+            content={data.description || "Описание недоступно"}
+            icon={<Briefcase className="w-6 h-6 text-white" />}
+            delay={index * 0.15 + 0.7}
+          />
 
           {/* Additional decorative element */}
           <motion.div

@@ -8,11 +8,12 @@ import {
 } from "~app/components/ui/carousel";
 import { useRef } from "react";
 import Autoplay from "embla-carousel-autoplay";
+import { CarouselPrevious, CarouselNext } from "~app/components/ui/carousel";
 
 export const CardMentor: FC = () => {
   const plugin = useRef(Autoplay({ delay: 2000, stopOnInteraction: true }));
   return (
-    <section className=" my-6  ">
+    <section className=" my-6 relative ">
       <div className="max-w-[1200px]  py-16 mx-auto  rounded-3xl px-4 bg-gradient-to-br from-slate-50 via-blue-50/30 to-teal-50/40">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
@@ -91,6 +92,10 @@ export const CardMentor: FC = () => {
               </CarouselItem>
             ))}
           </CarouselContent>
+          <div className="">
+            <CarouselPrevious className="absolute left-[-10px]  -translate-y-1/2 w-12 h-12 bg-white/80 backdrop-blur-sm border-2 border-teal-200 hover:border-teal-400 hover:bg-white transition-all shadow-lg" />
+            <CarouselNext className="absolute right-[-10px] -translate-y-1/2 w-12 h-12 bg-white/80 backdrop-blur-sm border-2 border-teal-200 hover:border-teal-400 hover:bg-white transition-all shadow-lg" />
+          </div>
         </Carousel>
       </div>
     </section>

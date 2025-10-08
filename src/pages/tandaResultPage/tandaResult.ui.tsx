@@ -7,6 +7,10 @@ import { ScrollTop } from "~shared/lib/react-router/scroll-top";
 import { Preloader } from "~shared/ui/preloader";
 import { TechStackCard } from "~features/tech-stack";
 import { LearningPathCard } from "~features/learning-path";
+import { useLocation } from "react-router-dom";
+import { CareerForecastDashboard } from "~widgets/career-forecast";
+// Импортируем новый компонент
+import { ScrollToTopButton } from "~shared/ui/scroll-to-top-button"; // Проверьте путь!
 
 export const TandaResult: React.FC = () => {
   const [isTestCompleted, setIsTestCompleted] = useState(false);
@@ -20,28 +24,43 @@ export const TandaResult: React.FC = () => {
     "Базы данных": 0,
   });
 
+  const location = useLocation();
+
   useEffect(() => {
-    // Имитация загрузки данных
     const loadData = async () => {
       try {
-        const savedResults = JSON.parse(localStorage.getItem("quizResults"));
-        if (savedResults) {
-          setResults(savedResults);
+        // 1. Проверяем результаты из state навигации
+        const resultsFromState = location.state?.quizResults;
+
+        // 2. Проверяем результаты из localStorage
+        const savedResults = JSON.parse(
+          localStorage.getItem("quizResults") || "null"
+        );
+
+        // 3. Приоритет у state, потом у localStorage
+        const finalResults = resultsFromState || savedResults;
+
+        if (finalResults) {
+          setResults(finalResults);
           setIsTestCompleted(true);
+
+          // Сохраняем в localStorage на будущее
+          if (resultsFromState) {
+            localStorage.setItem(
+              "quizResults",
+              JSON.stringify(resultsFromState)
+            );
+          }
         }
       } catch (error) {
         console.error("Ошибка загрузки результатов:", error);
       } finally {
-        setIsLoading(false); // Убираем прелоадер в любом случае
+        setIsLoading(false);
       }
     };
 
-    const timer = setTimeout(() => {
-      loadData();
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
+    loadData();
+  }, [location.state]);
 
   if (isLoading) {
     return (
@@ -59,7 +78,9 @@ export const TandaResult: React.FC = () => {
       <SalaryInfo />
       <TechStackCard />
       <LearningPathCard />
+      <CareerForecastDashboard />
       <CardMentor />
+      <ScrollToTopButton />
     </div>
   );
 };

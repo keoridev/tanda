@@ -70,8 +70,8 @@ export const LearningPathCard = () => {
               <div
                 className={`md:max-w-[50%] ${
                   index % 2 === 0
-                    ? "md:ml-auto md:mr-0 md:pl-8" // Четные - справа
-                    : "md:mr-auto md:ml-0 md:pr-8" // Нечетные - слева
+                    ? "md:mr-auto md:ml-0 md:pr-8" // Четные - справа
+                    : "md:ml-auto md:mr-0 md:pl-8"   // Нечетные - слева
                 }`}
               >
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
@@ -79,7 +79,7 @@ export const LearningPathCard = () => {
                     <h3 className="text-xl font-bold text-gray-800 dark:text-white">
                       {step.title}
                     </h3>
-                    <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full">
+                    <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs w-[100px] text-center py-2 rounded-full">
                       {step.duration}
                     </span>
                   </div>

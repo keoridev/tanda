@@ -49,7 +49,7 @@ export interface Mentor {
   experience: string;
   teacher: string;
   topics: string[];
-  skills:string[];
+  skills: string[];
   // Расширенные поля для детальной страницы
   bio: string;
   extendedBio: string;

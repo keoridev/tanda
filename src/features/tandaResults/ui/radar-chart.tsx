@@ -49,6 +49,7 @@ export const RadarChart = ({ data }: RadarChartProps) => {
             fill="none"
             stroke="#e5e7eb"
             strokeWidth="2"
+            
           />
         ))}
 
@@ -95,6 +96,7 @@ export const RadarChart = ({ data }: RadarChartProps) => {
             transition={{ duration: 0.5, delay: 1 + index * 0.1 }}
             className="cursor-pointer hover:scale-125 transition-transform"
           />
+          
         ))}
 
         {/* Labels */}

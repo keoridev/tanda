@@ -1,6 +1,4 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-
+import { useState, useCallback } from "react";
 import { questionsData } from "~entities/tandaQuestion";
 
 export const useQuizLogic = () => {
@@ -18,16 +16,19 @@ export const useQuizLogic = () => {
   });
 
   const [isTestFinished, setIsTestFinished] = useState(false);
-  const navigate = useNavigate();
 
-  const handleOptionChange = (value: string) => {
-    if (isSubmitting) return;
-    setSelectedOption(value);
-  };
+  const handleOptionChange = useCallback(
+    (value: string) => {
+      if (isSubmitting) return;
+      setSelectedOption(value);
+    },
+    [isSubmitting]
+  );
 
-  const submitAnswer = () => {
+  const submitAnswer = useCallback(() => {
     if (!selectedOption || isSubmitting) return;
 
+    console.log("Submitting answer:", selectedOption); // Для отладки
     setIsSubmitting(true);
 
     const currentQuestion = questionsData[0].questions[currentQuestionIndex];
@@ -41,6 +42,7 @@ export const useQuizLogic = () => {
         Object.entries(selectedOptionData.skills).forEach(([skill, score]) => {
           updatedResults[skill] = (updatedResults[skill] || 0) + score;
         });
+        console.log("Updated results:", updatedResults); // Для отладки
         return updatedResults;
       });
     }
@@ -49,29 +51,40 @@ export const useQuizLogic = () => {
       goToNextQuestion();
       setIsSubmitting(false);
     }, 300);
-  };
+  }, [selectedOption, isSubmitting, currentQuestionIndex]);
 
-  const goToNextQuestion = () => {
+  const goToNextQuestion = useCallback(() => {
+    console.log("Current question index:", currentQuestionIndex); // Для отладки
+    console.log("Total questions:", questionsData[0].questions.length); // Для отладки
+
     if (currentQuestionIndex < questionsData[0].questions.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1);
+      setCurrentQuestionIndex((prev) => {
+        const newIndex = prev + 1;
+        console.log("Moving to question:", newIndex); // Для отладки
+        return newIndex;
+      });
       setSelectedOption("");
     } else {
+      console.log("Finishing test"); // Для отладки
       finishTest();
     }
-  };
+  }, [currentQuestionIndex]);
 
-  const finishTest = () => {
+  const finishTest = useCallback(() => {
     setIsTestFinished(true);
-    localStorage.setItem("quizResults", JSON.stringify(results));
-    navigate("/login");
-  };
 
-  const handlePreviousQuestion = () => {
+    // СОХРАНЯЕМ РЕЗУЛЬТАТЫ В LOCALSTORAGE
+    localStorage.setItem("quizResults", JSON.stringify(results));
+
+    console.log("Test finished with results:", results);
+  }, [results]);
+
+  const handlePreviousQuestion = useCallback(() => {
     if (currentQuestionIndex > 0 && !isSubmitting) {
       setCurrentQuestionIndex((prev) => prev - 1);
       setSelectedOption("");
     }
-  };
+  }, [currentQuestionIndex, isSubmitting]);
 
   return {
     currentQuestionIndex,

@@ -66,14 +66,7 @@ export const useAuthLogic = (testResults?: Record<string, number>) => {
     }));
 
     return nameValid && emailValid && phoneValid;
-  }, [
-    formState.name,
-    formState.email,
-    formState.phone,
-    formState.nameTouched,
-    formState.emailTouched,
-    formState.phoneTouched,
-  ]);
+  }, [formState.name, formState.email, formState.phone]);
 
   const normalizeResults = (results: Record<string, number>): string => {
     const entries = Object.entries(results);
@@ -130,13 +123,13 @@ export const useAuthLogic = (testResults?: Record<string, number>) => {
         });
 
         navigate("/result");
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Ошибка отправки:", error);
         setFormState((prev) => ({
           ...prev,
           submitError:
-            error.response?.data?.message ||
-            "Произошла ошибка при отправке формы",
+            (error as { response?: { data?: { message?: string } } })?.response
+              ?.data?.message || "Произошла ошибка при отправке формы",
         }));
       } finally {
         setFormState((prev) => ({ ...prev, isSubmitting: false }));

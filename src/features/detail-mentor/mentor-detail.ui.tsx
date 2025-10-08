@@ -15,12 +15,12 @@ import {
   FiMail,
   FiPhone,
   FiMapPin,
+  FiArrowLeft,
 } from "react-icons/fi";
 import { styled } from "@mui/material/styles";
 import { Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import { ChevronDown } from "lucide-react";
 import type { AccordionProps, AccordionSummaryProps } from "@mui/material";
-import { Button } from "~app/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { pathKeys } from "~shared/lib/react-router";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -121,10 +121,13 @@ export const MentorDetailPage: React.FC<MentorDetailPageProps> = ({
       <div className="max-w-6xl mx-auto">
         {/* Breadcrumb */}
         <div className="mb-6">
-          <nav className="text-sm text-slate-500">
-            <a href="/result" className="hover:text-emerald-600">
-              Назад
-            </a>{" "}
+          <nav className="text-sm font-medium text-slate-500 flex items-center gap-2">
+            <button
+              onClick={() => window.history.back()}
+              className=" hover:text-emerald-600 border solid rounded-2xl border-emerald-500 p-2    font-bold"
+            >
+              <FiArrowLeft size={24} />
+            </button>{" "}
             /<span className="text-slate-900"> {mentor.name}</span>
           </nav>
         </div>
@@ -358,7 +361,7 @@ export const MentorDetailPage: React.FC<MentorDetailPageProps> = ({
                 >
                   <div className="flex items-center mb-4">
                     <div
-                      className={`bg-${year.color}-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold`}
+                      className={`bg-${year.color}-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold`}
                     >
                       {year.year}
                     </div>
