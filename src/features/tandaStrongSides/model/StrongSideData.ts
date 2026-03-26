@@ -10,8 +10,7 @@ export const skillToProfessions: Record<string, ProfessionData> = {
   Креативность: {
     testLink: "/frontend-test",
     professions: ["Frontend-разработчик"],
-    groups: ["(Пи)"],
-    image: Frontend,
+    groups: ["(Пи)"], image: Frontend,
     backgroundColor: "bg-[#8dddce]",
     reason:
       "Твой нестандартный подход к решению задач и умение видеть красоту в коде открывают двери в мир фронтенд-разработки, где ты сможешь создавать цифровые шедевры. Твои идеи оживят интерфейсы, делая их не просто функциональными, а по-настоящему захватывающими для пользователей.",

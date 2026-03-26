@@ -9,11 +9,10 @@ import { TechStackCard } from "~features/tech-stack";
 import { LearningPathCard } from "~features/learning-path";
 import { useLocation } from "react-router-dom";
 import { CareerForecastDashboard } from "~widgets/career-forecast";
-// Импортируем новый компонент
 import { ScrollToTopButton } from "~shared/ui/scroll-to-top-button"; // Проверьте путь!
 
 export const TandaResult: React.FC = () => {
-  const [isTestCompleted, setIsTestCompleted] = useState(false);
+  const [, setIsTestCompleted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [results, setResults] = useState({
     Frontend: 0,

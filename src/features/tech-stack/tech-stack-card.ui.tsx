@@ -4,7 +4,6 @@ import { techStacks } from "~entities/tech-stack";
 export const TechStackCard = () => {
   const [selectedProfession, setSelectedProfession] = useState(
     techStacks[0].profession
-    
   );
 
   const selectedStack =
@@ -27,8 +26,6 @@ export const TechStackCard = () => {
             Стек технологий для разных IT-профессий
           </p>
         </div>
-
-        {/* Profession Selector */}
         <div className="flex flex-wrap justify-center gap-3 mb-10">
           {techStacks.map((stack) => (
             <button
@@ -45,7 +42,6 @@ export const TechStackCard = () => {
           ))}
         </div>
 
-        {/* Tech Stack Grid */}
         <motion.div
           key={selectedProfession}
           initial={{ opacity: 0, y: 20 }}
@@ -93,8 +89,6 @@ export const TechStackCard = () => {
             </motion.div>
           ))}
         </motion.div>
-
-        {/* Legend */}
         <div className="flex flex-wrap justify-center gap-4 mt-8">
           <div className="flex items-center">
             <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>

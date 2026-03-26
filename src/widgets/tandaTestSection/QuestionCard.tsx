@@ -1,4 +1,6 @@
-import { motion, AnimatePresence } from "framer-motion";
+// QuestionCard.tsx
+import { AnimatePresence, motion } from "framer-motion";
+import { HelpOutline } from "@mui/icons-material";
 
 interface QuestionCardProps {
   question: string;
@@ -7,7 +9,6 @@ interface QuestionCardProps {
   showHint: boolean;
   onHintToggle: () => void;
   children: React.ReactNode;
-  isCompact?: boolean;
 }
 
 export const QuestionCard = ({
@@ -17,51 +18,57 @@ export const QuestionCard = ({
   showHint,
   onHintToggle,
   children,
-  isCompact = false,
 }: QuestionCardProps) => {
   return (
-    <div
-      className={`bg-white rounded-2xl shadow-sm border border-gray-200 ${
-        isCompact ? "p-4" : "p-6"
-      }`}
-    >
-      {/* Заголовок вопроса */}
-      <div className={`flex items-start gap-3 ${isCompact ? "mb-3" : "mb-4"}`}>
-        <div
-          className={`flex-shrink-0 bg-blue-100 text-blue-600 rounded-lg font-bold ${
-            isCompact ? "p-2 text-sm" : "p-3 text-base"
-          }`}
+    <div className="bg-white rounded-xl border border-gray-200 p-5">
+      {/* Верхняя часть с номером и кнопкой подсказки */}
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-400 font-medium">
+            Вопрос {questionNumber}
+          </span>
+        </div>
+        <button
+          onClick={onHintToggle}
+          className="p-1.5 text-gray-400 hover:text-gray-600 transition-colors"
+          aria-label={showHint ? "Скрыть подсказку" : "Показать подсказку"}
         >
-          {questionNumber}
-        </div>
-
-        <div className="flex-1 min-w-0">
-          <h2
-            className={`text-gray-900 font-medium ${
-              isCompact ? "text-base leading-tight" : "text-lg"
-            }`}
-          >
-            {question}
-          </h2>
-
-          {/* Подсказка */}
-          {showHint && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              className={`bg-yellow-50 border border-yellow-200 rounded-lg ${
-                isCompact ? "p-2 mt-2 text-xs" : "p-3 mt-3 text-sm"
-              }`}
-            >
-              <p className="text-yellow-800">
-                Выберите наиболее подходящий вариант ответа
-              </p>
-            </motion.div>
-          )}
-        </div>
+          <HelpOutline fontSize="small" />
+        </button>
       </div>
 
-      {/* Дети (OptionsList) */}
+      {/* Текст вопроса */}
+      <h2 className="text-lg text-gray-900 font-medium mb-4 leading-tight">
+        {question}
+      </h2>
+
+      {/* Индикатор прогресса */}
+      <div className="w-full h-1 bg-gray-100 rounded-full mb-4">
+        <div
+          className="h-full bg-gray-400 rounded-full transition-all duration-300"
+          style={{ width: `${(questionNumber / totalQuestions) * 100}%` }}
+        />
+      </div>
+
+      {/* Подсказка */}
+      <AnimatePresence>
+        {showHint && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden mb-4"
+          >
+            <div className="p-3 bg-gray-50 border border-gray-200 rounded-lg">
+              <p className="text-sm text-gray-600">
+                Выберите наиболее подходящий вариант ответа.
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Список вариантов */}
       {children}
     </div>
   );

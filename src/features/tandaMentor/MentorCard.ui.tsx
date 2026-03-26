@@ -8,7 +8,7 @@ import {
   Star,
   Users,
   ArrowRight,
-  Calendar,
+
   MessageCircle,
   Award,
 } from "lucide-react";
