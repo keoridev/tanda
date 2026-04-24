@@ -1,8 +1,5 @@
-// features/StrongSides/ui/StrongSidesCard/StrongSidesCard.tsx
 import { FC, useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-
-import { ProfessionData } from "./model/types/strongSidesTypes";
+import { motion } from "framer-motion";
 
 import {
   Star,
@@ -14,7 +11,17 @@ import {
   ChevronUp,
 } from "lucide-react";
 
-// Enhanced animated counter with smooth transitions
+interface ProfessionData {
+  testLink?: string;
+  professions?: string[] | { profession: string }[];
+  groups?: string[];
+  image?: string;
+  backgroundColor?: string;
+  reason?: string;
+  description?: string;
+}
+
+// Animated counter with smooth transitions
 const AnimatedScore: FC<{ score: number }> = ({ score }) => {
   const [displayScore, setDisplayScore] = useState(0);
 
@@ -25,7 +32,7 @@ const AnimatedScore: FC<{ score: number }> = ({ score }) => {
     const animate = () => {
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const easedProgress = 1 - Math.pow(1 - progress, 3); // cubic ease-out
+      const easedProgress = 1 - Math.pow(1 - progress, 3);
       const currentScore = Math.floor(score * easedProgress);
 
       setDisplayScore(currentScore);
@@ -49,7 +56,7 @@ const AnimatedScore: FC<{ score: number }> = ({ score }) => {
   );
 };
 
-// Glowing profession badge
+// ProfessionBadge - принимает только строку
 const ProfessionBadge: FC<{ profession: string; index: number }> = ({
   profession,
   index,
@@ -75,7 +82,7 @@ const ProfessionBadge: FC<{ profession: string; index: number }> = ({
   </motion.div>
 );
 
-// Text content with show more/less functionality for mobile
+// Expandable content with show more/less functionality
 const ExpandableContent: FC<{
   title: string;
   content: string;
@@ -86,15 +93,13 @@ const ExpandableContent: FC<{
   const [needsExpansion, setNeedsExpansion] = useState(false);
   const contentRef = useRef<HTMLParagraphElement>(null);
 
-  // Check if text needs to be truncated on mobile
   useEffect(() => {
     const checkTextOverflow = () => {
       if (contentRef.current && window.innerWidth < 1024) {
-        // Check if text content exceeds 5 lines
         const lineHeight = parseInt(
-          getComputedStyle(contentRef.current).lineHeight
+          getComputedStyle(contentRef.current).lineHeight,
         );
-        const maxHeight = lineHeight * 5; // 5 lines max
+        const maxHeight = lineHeight * 5;
         setNeedsExpansion(contentRef.current.scrollHeight > maxHeight);
       } else {
         setNeedsExpansion(false);
@@ -136,10 +141,9 @@ const ExpandableContent: FC<{
               needsExpansion && !isExpanded ? "line-clamp-5" : ""
             }`}
           >
-            {content}
+            {content || "Информация временно недоступна"}
           </p>
 
-          {/* Show more/less button for mobile */}
           {needsExpansion && (
             <button
               onClick={() => setIsExpanded(!isExpanded)}
@@ -164,7 +168,7 @@ const ExpandableContent: FC<{
   );
 };
 
-// Enhanced profession card with glass morphism effect
+// Исправленный ProfessionCard - теперь правильно принимает data
 export const ProfessionCard: FC<{
   data: ProfessionData;
   score: number;
@@ -172,6 +176,18 @@ export const ProfessionCard: FC<{
   skill: string;
 }> = ({ data, score, index, skill }) => {
   const [isHovered, setIsHovered] = useState(false);
+
+  // Отладка: что пришло в компонент
+  console.log(`ProfessionCard для ${skill}:`, {
+    data,
+    score,
+    index,
+    skill,
+    image: data?.image,
+    reason: data?.reason,
+    description: data?.description,
+    professions: data?.professions,
+  });
 
   const cardVariants = {
     hidden: { opacity: 0, y: 60, scale: 0.95 },
@@ -191,6 +207,17 @@ export const ProfessionCard: FC<{
     },
   };
 
+  const professionsList = Array.isArray(data.professions)
+    ? data.professions.map((p) =>
+        typeof p === "string" ? p : p.profession || String(p),
+      )
+    : [];
+
+  // Проверяем, есть ли данные для отображения
+  const hasImage = data?.image && data.image !== "";
+  const hasReason = data?.reason && data.reason !== "";
+  const hasDescription = data?.description && data.description !== "";
+
   return (
     <motion.div
       variants={cardVariants}
@@ -201,18 +228,14 @@ export const ProfessionCard: FC<{
       onHoverEnd={() => setIsHovered(false)}
       className="group relative"
     >
-      {/* Background glow effect */}
-
       <div className="flex flex-col lg:flex-row gap-0 bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 border border-white/80 overflow-hidden">
         <div
-          className={`flex-1 max-w-full lg:max-w-[500px] relative overflow-hidden ${data.backgroundColor}`}
+          className={`flex-1 max-w-full lg:max-w-[500px] relative overflow-hidden ${data.backgroundColor || "bg-gradient-to-br from-emerald-400 to-teal-500"}`}
           style={{ minHeight: "480px" }}
         >
-          {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-black/10"></div>
 
           <div className="relative z-10 p-8 flex flex-col items-center justify-center h-full text-center">
-            {/* Score Badge - Enhanced */}
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -227,7 +250,6 @@ export const ProfessionCard: FC<{
               </div>
             </motion.div>
 
-            {/* Skill Title */}
             <motion.h3
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -237,19 +259,25 @@ export const ProfessionCard: FC<{
               {skill}
             </motion.h3>
 
-            {/* Profession Badges */}
+            {/* Профессии */}
             <div className="space-y-4 mb-8 w-full max-w-md">
-              {data.professions?.map((profession, idx) => (
-                <ProfessionBadge
-                  key={idx}
-                  profession={profession}
-                  index={idx}
-                />
-              ))}
+              {professionsList.length > 0 ? (
+                professionsList.map((profession, idx) => (
+                  <ProfessionBadge
+                    key={idx}
+                    profession={profession}
+                    index={idx}
+                  />
+                ))
+              ) : (
+                <div className="text-gray-600 text-center">
+                  Профессии не найдены
+                </div>
+              )}
             </div>
 
-            {/* Professional Image */}
-            {data?.image && (
+            {/* Изображение */}
+            {hasImage && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -260,6 +288,13 @@ export const ProfessionCard: FC<{
                   src={data.image}
                   alt={skill}
                   className="max-h-96 max-w-full transform group-hover:scale-105 transition-transform duration-500"
+                  onError={(e) => {
+                    console.error(
+                      `Ошибка загрузки изображения для ${skill}:`,
+                      data.image,
+                    );
+                    e.currentTarget.style.display = "none";
+                  }}
                 />
               </motion.div>
             )}
@@ -272,23 +307,28 @@ export const ProfessionCard: FC<{
           transition={{ delay: index * 0.15 + 0.4, duration: 0.6 }}
           className="flex-1 p-8 bg-gradient-to-br from-white/95 to-gray-50/95 backdrop-blur-sm"
         >
-          {/* Why It Fits Section */}
           <ExpandableContent
             title="Почему подходит"
-            content={data.reason || "Информация недоступна"}
+            content={
+              hasReason
+                ? data.reason!
+                : "Информация временно недоступна. Пожалуйста, обратитесь к администратору."
+            }
             icon={<CheckCircle2 className="w-6 h-6 text-white" />}
             delay={index * 0.15 + 0.6}
           />
 
-          {/* Profession Essence Section */}
           <ExpandableContent
             title="Суть профессии"
-            content={data.description || "Описание недоступно"}
+            content={
+              hasDescription
+                ? data.description!
+                : "Информация временно недоступна. Пожалуйста, обратитесь к администратору."
+            }
             icon={<Briefcase className="w-6 h-6 text-white" />}
             delay={index * 0.15 + 0.7}
           />
 
-          {/* Additional decorative element */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

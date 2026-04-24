@@ -18,15 +18,15 @@ export const HomeContent: React.FC = () => {
 
   const features = [
     {
-      icon: <Target className="w-5 h-5" />,
+      icon: <Target className="w-6 h-6" />,
       text: "Персональная карьерная карта",
     },
     {
-      icon: <TrendingUp className="w-5 h-5" />,
+      icon: <TrendingUp className="w-6 h-6" />,
       text: "Анализ сильных сторон",
     },
     {
-      icon: <Award className="w-5 h-5" />,
+      icon: <Award className="w-6 h-6" />,
       text: "Рекомендации экспертов",
     },
   ];
@@ -38,9 +38,9 @@ export const HomeContent: React.FC = () => {
   ];
 
   return (
-    <div className="relative px-5 py-12 md:py-16 max-w-6xl mx-auto">
+    <div className="relative min-h-screen bg-gradient-to-br from-gray-50 to-white px-5 py-12 md:py-16 max-w-6xl mx-auto">
       {/* Hero section */}
-      <div className="text-center">
+      <div className="relative text-center z-10">
         <Reveal from="top" delay={0.1}>
           <img
             src={HomeImg}
@@ -50,13 +50,15 @@ export const HomeContent: React.FC = () => {
         </Reveal>
 
         <Reveal from="bottom" delay={0.2}>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight leading-tight">
             Узнайте, какая{" "}
-            <span className="text-[#0c7d70]">профессия</span>
+            <span className="text-[#0c7d70]">
+              профессия
+            </span>
             <br />
             вам подходит
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 mt-4 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 mt-4 max-w-2xl mx-auto leading-relaxed">
             Получите подробный отчёт от профориентологов и найдите дело по душе
             с помощью научного подхода
           </p>
@@ -65,25 +67,25 @@ export const HomeContent: React.FC = () => {
         {/* Quick info chips */}
         <div className="flex justify-center gap-4 flex-wrap mt-8">
           <Reveal from="left" delay={0.3}>
-            <div className="flex items-center bg-white border border-gray-200 rounded-full px-5 py-2 shadow-sm">
+            <div className="flex items-center bg-white border border-gray-200 rounded-full px-5 py-2">
               <img src={questionImg} alt="questions" className="w-5 h-5 mr-2" />
               <span className="text-gray-700 font-medium">14 вопросов</span>
             </div>
           </Reveal>
           <Reveal from="right" delay={0.3}>
-            <div className="flex items-center bg-white border border-gray-200 rounded-full px-5 py-2 shadow-sm">
+            <div className="flex items-center bg-white border border-gray-200 rounded-full px-5 py-2">
               <img src={timeImg} alt="time" className="w-5 h-5 mr-2" />
-              <span className="text-gray-700 font-medium">~2 минуты</span>
+              <span className="text-gray-700 font-semibold">~2 минуты</span>
             </div>
           </Reveal>
         </div>
       </div>
 
       {/* Features grid */}
-      <div className="grid md:grid-cols-3 gap-6 mt-16">
+      <div className="relative grid md:grid-cols-3 gap-6 mt-16 z-10">
         {features.map((feature, index) => (
           <Reveal from="bottom" delay={0.2 + index * 0.1} key={index}>
-            <div className="bg-white border border-gray-100 rounded-2xl p-6 text-center hover:border-gray-200 transition-colors">
+            <div className="bg-white border border-gray-100 rounded-2xl p-6 text-center hover:border-[#0c7d70]/30 transition-colors">
               <div className="w-12 h-12 bg-[#0c7d70]/10 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <div className="text-[#0c7d70]">{feature.icon}</div>
               </div>
@@ -94,7 +96,7 @@ export const HomeContent: React.FC = () => {
       </div>
 
       {/* Trust section */}
-      <div className="mt-16 bg-gray-50 rounded-3xl p-8 md:p-10 border border-gray-100">
+      <div className="relative mt-16 bg-gray-50 rounded-3xl p-8 md:p-10 border border-gray-100 z-10">
         <div className="flex items-center justify-center gap-2 mb-8">
           <Users className="w-5 h-5 text-[#0c7d70]" />
           <h2 className="text-lg font-semibold text-gray-900">
@@ -131,10 +133,10 @@ export const HomeContent: React.FC = () => {
 
       {/* CTA Button */}
       <Reveal from="bottom" delay={0.4}>
-        <div className="text-center mt-12">
+        <div className="relative text-center mt-12 z-10">
           <Button
             onClick={() => navigate("/test")}
-            className="bg-[#0c7d70] hover:bg-[#0a6b5f] text-white font-semibold px-8 py-4 rounded-xl text-lg shadow-md hover:shadow-lg transition-all inline-flex items-center gap-2"
+            className="bg-[#0c7d70] hover:bg-[#0a6b5f] text-white font-semibold px-8 py-4 rounded-xl text-lg transition-all inline-flex items-center gap-2"
           >
             Пройти тест бесплатно
             <ArrowRight className="w-5 h-5" />

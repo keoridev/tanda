@@ -1,38 +1,54 @@
-import { SkillScore } from "../types/strongSidesTypes";
-import { skillToProfessions } from "../StrongSideData";
+// features/tandaStrongSides/model/lib/useStrongSides.ts
+import { useState, useEffect } from "react";
+import { fetchTopProfessions, Profession } from "~shared/lib/api/tandaApi";
+
+export interface SkillWithProfession {
+  skill: string;
+  score: number;
+  professionData: Profession;
+}
 
 export const useStrongSides = (results: Record<string, number>) => {
-  if (!results || Object.keys(results).length === 0) {
-    return { topSkills: [], recommendedProfessions: [] };
-  }
+  const [topSkills, setTopSkills] = useState<SkillWithProfession[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const totalScore = Object.values(results).reduce(
-    (acc, score) => acc + score,
-    0
+  useEffect(() => {
+    const loadProfessions = async () => {
+      const hasResults = Object.values(results).some((score) => score > 0);
+
+      if (!hasResults) {
+        setTopSkills([]);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+        const professions = await fetchTopProfessions(results);
+
+        const skillsWithProfessions = professions.map((prof) => ({
+          skill: prof.skillDisplay,
+          score: results[prof.skillDisplay as keyof typeof results] || 0,
+          professionData: prof,
+        }));
+
+        setTopSkills(skillsWithProfessions);
+      } catch (err) {
+        console.error("Ошибка загрузки профессий:", err);
+        setError("Не удалось загрузить рекомендации");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProfessions();
+  }, [results]);
+
+  const recommendedProfessions = topSkills.map(
+    (skill) => skill.professionData.profession,
   );
 
-  if (totalScore === 0) {
-    return { topSkills: [], recommendedProfessions: [] };
-  }
-
-  const sortedSkills: SkillScore[] = Object.entries(results)
-    .map(([skill, score]) => ({
-      skill,
-      score: Math.round((score / totalScore) * 100), // Процентное соотношение
-    }))
-    .filter(({ score }) => score > 0) // Убираем навыки с 0% совпадением
-    .sort((a, b) => b.score - a.score) // Сортировка по убыванию
-    .slice(0, 3); //Берем топ-3 навыков
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-  const recommendedProfessions: string[] = [];
-  sortedSkills.forEach(({ skill }) => {
-    const professions = skillToProfessions[skill]?.professions || [];
-    professions.forEach((profession) => {
-      if (!recommendedProfessions.includes(profession)) {
-        recommendedProfessions.push(profession);
-      }
-    });
-  });
-
-  return { topSkills: sortedSkills, recommendedProfessions };
+  return { topSkills, recommendedProfessions, loading, error };
 };

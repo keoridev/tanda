@@ -45,7 +45,7 @@ export const QuestionCard = ({
       {/* Индикатор прогресса */}
       <div className="w-full h-1 bg-gray-100 rounded-full mb-4">
         <div
-          className="h-full bg-gray-400 rounded-full transition-all duration-300"
+          className="h-full bg-[#0c7d70] rounded-full transition-all duration-300"
           style={{ width: `${(questionNumber / totalQuestions) * 100}%` }}
         />
       </div>

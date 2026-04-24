@@ -2,7 +2,7 @@ import { LearningPath } from "./learningPathTypes";
 
 export const learningPaths: LearningPath[] = [
   {
-    profession: "Frontend-разработчик (2024)",
+    profession: "Frontend-разработчик (2025)",
     steps: [
       {
         id: "front-1",
@@ -105,7 +105,7 @@ export const learningPaths: LearningPath[] = [
     ],
   },
   {
-    profession: "Backend-разработчик (2024)",
+    profession: "Backend-разработчик (2025)",
     steps: [
       {
         id: "back-1",
@@ -196,7 +196,7 @@ export const learningPaths: LearningPath[] = [
     ],
   },
   {
-    profession: "Data Scientist (2024)",
+    profession: "Data Scientist (2025)",
     steps: [
       {
         id: "data-1",
@@ -287,7 +287,7 @@ export const learningPaths: LearningPath[] = [
     ],
   },
   {
-    profession: "DevOps/SRE (2024)",
+    profession: "DevOps/SRE (2025)",
     steps: [
       {
         id: "devops-1",
@@ -387,7 +387,7 @@ export const learningPaths: LearningPath[] = [
     ],
   },
   {
-    profession: "UX/UI дизайнер (2024)",
+    profession: "UX/UI дизайнер (2025)",
     steps: [
       {
         id: "design-1",

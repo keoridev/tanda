@@ -1,5 +1,4 @@
-import { LineChart, Line, ResponsiveContainer } from 'recharts';
-
+import {LineChart, Line, ResponsiveContainer} from 'recharts'
 interface SparklineProps {
   data: { year: number; value: number }[];
   color: string;

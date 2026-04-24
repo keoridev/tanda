@@ -34,7 +34,7 @@ export const QuizProgress = ({
             key={i}
             className={`w-3 h-3 rounded-full transition-all duration-300 ${
               i < currentQuestionIndex
-                ? "bg-emerald-500 scale-110"
+                ? "bg-[#0c7d70] scale-110"
                 : i === currentQuestionIndex
                 ? "bg-[#0c7d70] scale-125 ring-2 ring-[#e6f4f2]"
                 : "bg-gray-300"

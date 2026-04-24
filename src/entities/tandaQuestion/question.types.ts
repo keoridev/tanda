@@ -1,4 +1,4 @@
-// В types или в файле, где определены Question и Option
+
 export interface SkillScore {
   [key: string]: number;
 }

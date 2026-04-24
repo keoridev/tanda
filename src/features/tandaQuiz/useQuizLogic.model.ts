@@ -1,10 +1,37 @@
-import { useState, useCallback } from "react";
-import { questionsData } from "~entities/tandaQuestion";
+import { ApiQuestion, fetchQuestions } from "~shared/lib/api/tandaApi";
+import { TransformedQuestion } from "./../../entities/tandaQuestion/question.types";
+import { useState, useEffect, useCallback } from "react";
+
+// Функция трансформации API вопросов в формат TransformedQuestion
+const transformApiQuestions = (
+  apiQuestions: ApiQuestion[],
+): TransformedQuestion[] => {
+  return apiQuestions.map((q, idx) => ({
+    id: idx + 1,
+    question: q.text,
+    options: q.options.map((opt) => ({
+      value: opt.value,
+      text: opt.text,
+      skills: {
+        "Визуальное мышление": opt.skill1,
+        Креативность: opt.skill2,
+        Логика: opt.skill3,
+        Аналитика: opt.skill4,
+        Организация: opt.skill5,
+        Структурирование: opt.skill6,
+      },
+    })),
+  }));
+};
 
 export const useQuizLogic = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isTestFinished, setIsTestFinished] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [quizQuestions, setQuizQuestions] = useState<TransformedQuestion[]>([]);
 
   const [results, setResults] = useState({
     "Визуальное мышление": 0,
@@ -15,34 +42,52 @@ export const useQuizLogic = () => {
     Структурирование: 0,
   });
 
-  const [isTestFinished, setIsTestFinished] = useState(false);
+  // Загрузка вопросов из API
+  useEffect(() => {
+    const loadQuestions = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const apiQuestions = await fetchQuestions();
+        const transformed = transformApiQuestions(apiQuestions);
+        setQuizQuestions(transformed);
+      } catch (err) {
+        console.error("Ошибка загрузки вопросов:", err);
+        setError(
+          "Не удалось загрузить вопросы. Пожалуйста, обновите страницу.",
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadQuestions();
+  }, []);
 
   const handleOptionChange = useCallback(
     (value: string) => {
       if (isSubmitting) return;
       setSelectedOption(value);
     },
-    [isSubmitting]
+    [isSubmitting],
   );
 
   const submitAnswer = useCallback(() => {
-    if (!selectedOption || isSubmitting) return;
+    if (!selectedOption || isSubmitting || quizQuestions.length === 0) return;
 
-    console.log("Submitting answer:", selectedOption); // Для отладки
     setIsSubmitting(true);
 
-    const currentQuestion = questionsData[0].questions[currentQuestionIndex];
+    const currentQuestion = quizQuestions[currentQuestionIndex];
     const selectedOptionData = currentQuestion.options.find(
-      (option) => option.value === selectedOption
+      (option) => option.value === selectedOption,
     );
 
     if (selectedOptionData) {
       setResults((prevResults) => {
         const updatedResults = { ...prevResults };
         Object.entries(selectedOptionData.skills).forEach(([skill, score]) => {
-          updatedResults[skill] = (updatedResults[skill] || 0) + score;
+          updatedResults[skill as keyof typeof updatedResults] += score;
         });
-        console.log("Updated results:", updatedResults); // Для отладки
         return updatedResults;
       });
     }
@@ -50,39 +95,28 @@ export const useQuizLogic = () => {
     setTimeout(() => {
       goToNextQuestion();
       setIsSubmitting(false);
-    }, 300);
-  }, [selectedOption, isSubmitting, currentQuestionIndex]);
+    }, 800);
+  }, [selectedOption, isSubmitting, currentQuestionIndex, quizQuestions]);
 
   const goToNextQuestion = useCallback(() => {
-    console.log("Current question index:", currentQuestionIndex); // Для отладки
-    console.log("Total questions:", questionsData[0].questions.length); // Для отладки
-
-    if (currentQuestionIndex < questionsData[0].questions.length - 1) {
-      setCurrentQuestionIndex((prev) => {
-        const newIndex = prev + 1;
-        console.log("Moving to question:", newIndex); // Для отладки
-        return newIndex;
-      });
-      setSelectedOption("");
+    if (currentQuestionIndex < quizQuestions.length - 1) {
+      setCurrentQuestionIndex((prev) => prev + 1);
+      setSelectedOption(null);
     } else {
-      console.log("Finishing test"); // Для отладки
       finishTest();
     }
-  }, [currentQuestionIndex]);
+  }, [currentQuestionIndex, quizQuestions.length]);
 
   const finishTest = useCallback(() => {
-    setIsTestFinished(true);
-
-    // СОХРАНЯЕМ РЕЗУЛЬТАТЫ В LOCALSTORAGE
+    // Сохраняем результаты в localStorage
     localStorage.setItem("quizResults", JSON.stringify(results));
-
-    console.log("Test finished with results:", results);
+    setIsTestFinished(true);
   }, [results]);
 
   const handlePreviousQuestion = useCallback(() => {
     if (currentQuestionIndex > 0 && !isSubmitting) {
       setCurrentQuestionIndex((prev) => prev - 1);
-      setSelectedOption("");
+      setSelectedOption(null);
     }
   }, [currentQuestionIndex, isSubmitting]);
 
@@ -95,6 +129,9 @@ export const useQuizLogic = () => {
     isTestFinished,
     isSubmitting,
     handlePreviousQuestion,
-    totalQuestions: questionsData[0].questions.length,
+    totalQuestions: quizQuestions.length,
+    loading,
+    error,
+    quizQuestions,
   };
 };

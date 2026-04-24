@@ -144,7 +144,7 @@ export const useAuthLogic = (testResults?: Record<string, number>) => {
       validateForm,
       submitTraining,
       navigate,
-    ]
+    ],
   );
 
   useEffect(() => {

@@ -36,15 +36,15 @@ export const OptionsList = ({
             disabled={isSubmitting}
             className={`w-full text-left p-4 rounded-lg border transition-all duration-200 ${
               isSelected
-                ? "border-green-600 bg-green-50"
-                : "border-gray-300 hover:border-green-400 hover:bg-green-50/50"
+                ? "border-[#0c7d70] bg-[#0c7d70]/5"
+                : "border-gray-300 hover:border-[#0c7d70]/50 hover:bg-[#0c7d70]/5"
             } ${isSubmitting ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
           >
             <div className="flex items-center">
               {/* Индикатор выбора */}
               <div className={`flex-shrink-0 w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center ${
                 isSelected
-                  ? "border-green-600 bg-green-600"
+                  ? "border-[#0c7d70] bg-[#0c7d70]"
                   : "border-gray-400"
               }`}>
                 {isSelected && (
@@ -55,7 +55,7 @@ export const OptionsList = ({
               {/* Буква варианта */}
               <div className="w-6 flex-shrink-0 mr-3">
                 <span className={`text-sm font-medium ${
-                  isSelected ? "text-green-700" : "text-gray-600"
+                  isSelected ? "text-[#0c7d70]" : "text-gray-600"
                 }`}>
                   {option.value}.
                 </span>
@@ -74,7 +74,7 @@ export const OptionsList = ({
               {isSelected && (
                 <div className="flex-shrink-0 ml-2">
                   <CheckCircleOutline 
-                    className="text-green-600" 
+                    className="text-[#0c7d70]" 
                     fontSize="small"
                   />
                 </div>

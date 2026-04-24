@@ -3,7 +3,6 @@ import { apiClient } from "~shared/index";
 import { BackendQuestion, TransformedQuestion, TransformedOption, BackendOption, } from "./question.types";
 
 export const tandaApi = {
-    // Получение вопросов с бэкенда
     async getQuestions(): Promise<TransformedQuestion[]> {
         try {
             const response = await apiClient.get<BackendQuestion[]>('/tanda/');

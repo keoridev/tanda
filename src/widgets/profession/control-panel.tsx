@@ -27,6 +27,7 @@ import {
   CardTitle,
 } from "~app/components/ui/card";
 import { Separator } from "~app/components/ui/separator";
+import { motion } from "framer-motion";
 
 export const ControlPanel = () => {
   const { viewMode, chartType, timeRange, actions } = useProfessionStore();
@@ -64,25 +65,30 @@ export const ControlPanel = () => {
   ];
 
   return (
-    <Card className="mb-6">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg">Управление графиком</CardTitle>
-        <CardDescription>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      <Card className="mb-8 shadow-lg border border-gray-100">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-xl text-gray-900">Управление графиком</CardTitle>
+        <CardDescription className="text-base">
           Настройте отображение данных и выберите период анализа
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-8">
         {/* Тип графика */}
-        <div className="space-y-3">
-          <Label htmlFor="chart-type">Тип графика</Label>
+        <div className="space-y-4">
+          <Label htmlFor="chart-type" className="text-base font-medium text-gray-700">Тип графика</Label>
           <ToggleGroup
             type="single"
             value={chartType}
             onValueChange={(value) => {
               if (value) actions.setChartType(value as "line" | "bar" | "area");
             }}
-            className="grid grid-cols-3 gap-2"
+            className="grid grid-cols-3 gap-3"
           >
             {chartTypeOptions.map((option) => {
               const Icon = option.icon;
@@ -90,10 +96,10 @@ export const ControlPanel = () => {
                 <ToggleGroupItem
                   key={option.value}
                   value={option.value}
-                  className="flex flex-col h-16 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                  className="flex flex-col h-20 p-3 data-[state=on]:bg-[#0c7d70] data-[state=on]:text-white hover:bg-[#0c7d70]/10 transition-all"
                 >
-                  <Icon className="w-4 h-4 mb-1" />
-                  <span className="text-xs">{option.label}</span>
+                  <Icon className="w-5 h-5 mb-2" />
+                  <span className="text-sm font-medium">{option.label}</span>
                 </ToggleGroupItem>
               );
             })}
@@ -103,20 +109,20 @@ export const ControlPanel = () => {
         <Separator />
 
         {/* Представление данных */}
-        <div className="space-y-3">
-          <Label htmlFor="view-mode">Представление данных</Label>
+        <div className="space-y-4">
+          <Label htmlFor="view-mode" className="text-base font-medium text-gray-700">Представление данных</Label>
           <Select
             value={viewMode}
             onValueChange={(value) =>
               actions.setViewMode(value as "absolute" | "growth")
             }
           >
-            <SelectTrigger id="view-mode" className="w-full">
+            <SelectTrigger id="view-mode" className="w-full h-12 text-base">
               <SelectValue placeholder="Выберите представление" />
             </SelectTrigger>
             <SelectContent>
               {viewModeOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
+                <SelectItem key={option.value} value={option.value} className="text-base">
                   {option.label}
                 </SelectItem>
               ))}
@@ -127,21 +133,25 @@ export const ControlPanel = () => {
         <Separator />
 
         {/* Период времени */}
-        <div className="space-y-3">
-          <Label>Временной период</Label>
-          <div className="grid grid-cols-3 gap-3">
+        <div className="space-y-4">
+          <Label className="text-base font-medium text-gray-700">Временной период</Label>
+          <div className="grid grid-cols-3 gap-4">
             {timeRangeOptions.map((option) => {
               const Icon = option.icon;
               return (
                 <Button
                   key={option.value}
                   variant={timeRange === option.value ? "default" : "outline"}
-                  className="flex flex-col h-21 p-2 transition-all hover:scale-105"
+                  className={`flex flex-col h-24 p-4 transition-all hover:scale-105 ${
+                    timeRange === option.value 
+                      ? 'bg-[#0c7d70] hover:bg-[#0a6b5f] text-white' 
+                      : 'hover:bg-[#0c7d70]/5 hover:border-[#0c7d70]/30'
+                  }`}
                   onClick={() => actions.setTimeRange(option.value as any)}
                 >
-                  <Icon className="w-5 h-5 " />
-                  <span className="text-sm font-medium">{option.label}</span>
-                  <span className="text-xs text-muted-foreground ">
+                  <Icon className="w-6 h-6 mb-2" />
+                  <span className="text-sm font-semibold">{option.label}</span>
+                  <span className="text-xs opacity-80">
                     {option.description}
                   </span>
                 </Button>
@@ -153,19 +163,20 @@ export const ControlPanel = () => {
         <Separator />
 
         {/* Действия с данными */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
           <div className="space-y-1">
-            <Label>Экспорт данных</Label>
-            <p className="text-sm text-muted-foreground">
+            <Label className="text-base font-medium text-gray-900">Экспорт данных</Label>
+            <p className="text-sm text-gray-600">
               Скачайте данные в различных форматах
             </p>
           </div>
-          <Button variant="outline" size="sm" className="gap-2">
-            <Download className="w-4 h-4" />
+          <Button variant="outline" size="default" className="gap-2 hover:bg-[#0c7d70] hover:text-white hover:border-[#0c7d70]">
+            <Download className="w-5 h-5" />
             Экспорт
           </Button>
         </div>
       </CardContent>
     </Card>
+    </motion.div>
   );
 };

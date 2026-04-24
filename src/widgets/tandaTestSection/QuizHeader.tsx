@@ -50,12 +50,12 @@ export const QuizHeader = ({
         {/* Прогресс-бар */}
         <div className="mb-1">
           <div className="flex justify-between text-sm text-gray-600 mb-1">
-            <span className="font-medium text-green-600">{Math.round(progress)}%</span>
+            <span className="font-medium text-[#0c7d70]">{Math.round(progress)}%</span>
             <span>{answeredQuestions} ответов</span>
           </div>
           <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
             <div
-              className="h-full bg-green-600 rounded-full transition-all duration-300"
+              className="h-full bg-[#0c7d70] rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>

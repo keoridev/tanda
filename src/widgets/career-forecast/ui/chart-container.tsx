@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import { useProfessionStore } from "~entities/profession";
 import { CustomTooltip } from "./custom-tooltip";
+import { motion } from "framer-motion";
 
 export const  ChartContainer = () => {
   const chartRef = useRef<HTMLDivElement>(null);
@@ -216,18 +217,21 @@ export const  ChartContainer = () => {
   };
 
   return (
-    <div
-      className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300"
+    <motion.div
+      className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 mb-8"
       ref={chartRef}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
     >
-      <div className="h-[420px]">
+      <div className="h-[450px]">
         <ResponsiveContainer width="100%" height="100%">
           {renderChart()}
         </ResponsiveContainer>
       </div>
 
       {/* Улучшенная легенда с пояснениями */}
-      <div className="mt-6 flex items-center justify-center gap-8 text-sm text-gray-600">
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-gray-600">
         <div className="flex items-center gap-3">
           <div className="w-6 h-0.5 bg-gray-500 rounded-full"></div>
           <span className="font-medium">Исторические данные</span>
@@ -243,12 +247,12 @@ export const  ChartContainer = () => {
           <span className="font-medium">Прогноз</span>
         </div>
         {timeRange === "all" && (
-          <div className="flex items-center gap-3 text-red-500">
-            <div className="w-6 h-0.5 bg-red-500 rounded-full"></div>
+          <div className="flex items-center gap-3 text-[#0c7d70]">
+            <div className="w-6 h-0.5 bg-[#0c7d70] rounded-full"></div>
             <span className="font-medium">Текущий год</span>
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };

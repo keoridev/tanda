@@ -2,40 +2,44 @@ import { TrendingUp, TrendingDown } from "lucide-react";
 import { useProfessionStore } from "~entities/profession";
 import { Sparkline } from "./sparkline";
 import { cn } from "~app/lib/utils";
+import { motion } from "framer-motion";
 
 export const ProfessionCards = () => {
   const { data, selectedProfessions, actions } = useProfessionStore();
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-      {data.map((profession) => {
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+      {data.map((profession, index) => {
         const latestData = profession.data[profession.data.length - 1];
         const isVisible = selectedProfessions.has(profession.id);
 
         return (
-          <div
+          <motion.div
             key={profession.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
             className={cn(
-              "bg-white rounded-xl p-4 shadow-sm border-l-4 cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105",
-              isVisible ? "opacity-100" : "opacity-50 hover:opacity-70"
+              "bg-white rounded-2xl p-6 shadow-sm border cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 border-l-4",
+              isVisible ? "opacity-100 border-l-[#0c7d70]" : "opacity-60 hover:opacity-80 border-l-gray-300"
             )}
-            style={{ borderLeftColor: profession.color }}
+            style={{ borderLeftColor: isVisible ? '#0c7d70' : profession.color }}
             onClick={() => actions.openModal(profession)}
           >
-            <div className="flex justify-between items-start mb-3">
-              <h3 className="font-semibold text-gray-900 text-lg">
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="font-semibold text-gray-900 text-lg leading-tight">
                 {profession.name}
               </h3>
               <div className="flex items-center gap-2">
                 {latestData.growth > 0 ? (
-                  <TrendingUp className="w-4 h-4 text-green-500" />
+                  <TrendingUp className="w-5 h-5 text-[#0c7d70]" />
                 ) : (
-                  <TrendingDown className="w-4 h-4 text-red-500" />
+                  <TrendingDown className="w-5 h-5 text-red-500" />
                 )}
                 <span
                   className={cn(
-                    "text-sm font-semibold",
-                    latestData.growth > 0 ? "text-green-600" : "text-red-600"
+                    "text-sm font-bold",
+                    latestData.growth > 0 ? "text-[#0c7d70]" : "text-red-600"
                   )}
                 >
                   {latestData.growth > 0 ? "+" : ""}
@@ -46,14 +50,16 @@ export const ProfessionCards = () => {
 
             <div className="flex justify-between items-end">
               <div>
-                <div className="text-xs text-gray-500 mb-1">Прогноз к 2029</div>
-                <div className="text-xl font-bold text-gray-900">
-                  {latestData.value} пунктов
+                <div className="text-xs text-gray-500 mb-2 font-medium">Прогноз к 2029</div>
+                <div className="text-2xl font-bold text-gray-900">
+                  {latestData.value} <span className="text-sm text-gray-600">пунктов</span>
                 </div>
               </div>
-              <Sparkline data={profession.data} color={profession.color} />
+              <div className="ml-4">
+                <Sparkline data={profession.data} color={isVisible ? '#0c7d70' : profession.color} />
+              </div>
             </div>
-          </div>
+          </motion.div>
         );
       })}
     </div>

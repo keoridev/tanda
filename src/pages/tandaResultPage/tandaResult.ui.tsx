@@ -1,4 +1,6 @@
+// pages/tandaResultPage/tandaResult.ui.tsx
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { ResultChart } from "~features/tandaResults";
 import { StrongSection } from "~widgets/tandaStrongSection";
 import { SalaryInfo } from "~features/tandaSalaryInfo";
@@ -7,20 +9,18 @@ import { ScrollTop } from "~shared/lib/react-router/scroll-top";
 import { Preloader } from "~shared/ui/preloader";
 import { TechStackCard } from "~features/tech-stack";
 import { LearningPathCard } from "~features/learning-path";
-import { useLocation } from "react-router-dom";
 import { CareerForecastDashboard } from "~widgets/career-forecast";
-import { ScrollToTopButton } from "~shared/ui/scroll-to-top-button"; // Проверьте путь!
+import { ScrollToTopButton } from "~shared/ui/scroll-to-top-button";
 
 export const TandaResult: React.FC = () => {
-  const [, setIsTestCompleted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [results, setResults] = useState({
-    Frontend: 0,
-    Backend: 0,
-    "UX/UI дизайнер": 0,
-    "Проектный менеджер": 0,
-    "Продуктовый менеджер": 0,
-    "Базы данных": 0,
+    "Визуальное мышление": 0,
+    "Креативность": 0,
+    "Логика": 0,
+    "Аналитика": 0,
+    "Организация": 0,
+    "Структурирование": 0,
   });
 
   const location = useLocation();
@@ -28,27 +28,24 @@ export const TandaResult: React.FC = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        // 1. Проверяем результаты из state навигации
         const resultsFromState = location.state?.quizResults;
-
-        // 2. Проверяем результаты из localStorage
         const savedResults = JSON.parse(
           localStorage.getItem("quizResults") || "null"
         );
 
-        // 3. Приоритет у state, потом у localStorage
         const finalResults = resultsFromState || savedResults;
 
         if (finalResults) {
-          setResults(finalResults);
-          setIsTestCompleted(true);
+          const validatedResults = { ...results };
+          Object.keys(finalResults).forEach(key => {
+            if (key in validatedResults) {
+              validatedResults[key as keyof typeof validatedResults] = finalResults[key];
+            }
+          });
+          setResults(validatedResults);
 
-          // Сохраняем в localStorage на будущее
           if (resultsFromState) {
-            localStorage.setItem(
-              "quizResults",
-              JSON.stringify(resultsFromState)
-            );
+            localStorage.setItem("quizResults", JSON.stringify(validatedResults));
           }
         }
       } catch (error) {
