@@ -1,1 +1,1 @@
-export  { useTestReset } from "./model/useTestReset";
+export { useTestReset } from "./model/useTestReset";

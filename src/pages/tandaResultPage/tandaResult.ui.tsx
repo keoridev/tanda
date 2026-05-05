@@ -75,7 +75,7 @@ export const TandaResult: React.FC = () => {
       <TechStackCard />
       <LearningPathCard />
       <CareerForecastDashboard />
-      <CardMentor />
+      {/* <CardMentor /> */}
       <ScrollToTopButton />
     </div>
   );

@@ -2,7 +2,6 @@ import axios, { AxiosInstance } from "axios";
 
 const API_URL = import.meta.env.VITE_BASE_URL as string;
 
-console.log("API_URL:", API_URL); 
 
 export const apiClient: AxiosInstance = axios.create({
   baseURL: API_URL,

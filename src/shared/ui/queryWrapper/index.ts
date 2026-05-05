@@ -1,0 +1,1 @@
+export { QueryWrapper } from "./queryWrapper";
